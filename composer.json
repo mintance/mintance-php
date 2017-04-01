@@ -1,0 +1,26 @@
+{
+  "name": "mintance/mintance-php",
+  "description": "The Official PHP library for Mintance",
+  "keywords": [
+    "mintance",
+    "mintance php"
+  ],
+  "homepage": "https://mintance.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mintance <dev@mintance.com>",
+      "homepage": "https://mintance.com/"
+    }
+  ],
+  "require": {
+    "php": ">=5.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.7.*",
+    "phpdocumentor/phpdocumentor": "2.*"
+  },
+  "autoload": {
+    "psr-4": { "Mintance\\": "src/" }
+  }
+}
