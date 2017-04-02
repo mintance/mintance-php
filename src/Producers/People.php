@@ -48,16 +48,17 @@ class People extends AbstractProducer {
 			return $this->_people_id;
 		}
 
-		if(empty($this->_visitor_id)) {
-			throw new Exception('Empty visitor_id.');
-		}
-
 		$this->_transport->setEndpoint('people/identify');
 
-		$response = $this->_transport->execute([
-			'visitor_id' => $this->_visitor_id,
+		$data = [
 			'identifier' => $identifier
-		]);
+		];
+
+		if(!empty($this->_visitor_id)) {
+			$data['visitor_id'] = $this->_visitor_id;
+		}
+
+		$response = $this->_transport->execute($data);
 
 		$this->_people = $response['people'];
 
@@ -76,6 +77,12 @@ class People extends AbstractProducer {
 				$data[$key] = $value;
 			} else {
 				$data['fields'][$key] = $value;
+			}
+		}
+
+		if(empty($this->get()['id'])) {
+			if(!empty($this->_identifier)) {
+				$this->identify($this->_identifier);
 			}
 		}
 
