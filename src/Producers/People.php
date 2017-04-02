@@ -78,6 +78,10 @@ class People extends AbstractProducer {
 				$data['fields'][$key] = $value;
 			}
 		}
+
+		$this->_transport->setEndpoint('people/'.$this->get()['id']);
+
+		$this->_transport->execute($data);
 	}
 
 	public function get() {
