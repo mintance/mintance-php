@@ -28,10 +28,10 @@ $mt->track("button clicked", array("label" => "sign-up"));
 
 // create/update a profile for user id 12345
 $mt->people->set(array(
-    '$first_name'       => "John",
-    '$last_name'        => "Doe",
-    '$email'            => "john.doe@example.com",
-    '$phone'            => "5555555555",
+    'first_name'       => "John",
+    'last_name'        => "Doe",
+    'email'            => "john.doe@example.com",
+    'phone'            => "5555555555",
     "Favorite Color"    => "red"
 ));
 ```
@@ -56,10 +56,10 @@ $mt->track("button clicked", array("label" => "sign-up"));
 
 // create/update a profile for user id 12345
 $mt->people->set(array(
-    '$first_name'       => "John",
-    '$last_name'        => "Doe",
-    '$email'            => "john.doe@example.com",
-    '$phone'            => "5555555555",
+    'first_name'       => "John",
+    'last_name'        => "Doe",
+    'email'            => "john.doe@example.com",
+    'phone'            => "5555555555",
     "Favorite Color"    => "red"
 ));
 ```
