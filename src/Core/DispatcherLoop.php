@@ -13,7 +13,7 @@ abstract class DispatcherLoop {
 			throw new Exception('Method is undefined.');
 		}
 
-		$args = $args[0];
+		$args = array_shift($args);
 
 		if(!empty($this->_subscribers[$name.':before'])) {
 			foreach ($this->_subscribers[$name.':before'] as $subscriber) {
@@ -28,6 +28,8 @@ abstract class DispatcherLoop {
 				$subscriber($response);
 			}
 		}
+
+		return $response;
 	}
 
 	public function register($event, callable $callback) {
