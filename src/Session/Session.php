@@ -1,6 +1,6 @@
 <?php
 
-namespace Helpers;
+namespace Mintance\Session;
 
 use Mintance\Transport\AbstractTransport;
 
