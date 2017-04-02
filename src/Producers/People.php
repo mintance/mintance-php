@@ -2,6 +2,7 @@
 
 namespace Mintance\Producers;
 
+use Mintance\Exceptions\Exception;
 use Mintance\Transport\AbstractTransport;
 
 class People extends AbstractProducer {
@@ -12,9 +13,15 @@ class People extends AbstractProducer {
 
 	protected $_people_id;
 
+	protected $_identifier;
+
 	protected $_type = 'visitor';
 
 	protected $_people = [];
+
+	protected $_default_fields = [
+		'name', 'first_name', 'last_name', 'email', 'phone'
+	];
 
 	public function __construct(AbstractTransport $transport) {
 		parent::__construct($transport);
@@ -24,16 +31,53 @@ class People extends AbstractProducer {
 		$this->_subscribe();
 	}
 
+	public function setIdentifier($identifier) {
+
+		$this->_identifier = $identifier;
+
+		$this->_transport->register('execute:before', function (&$args) {
+			if(empty($this->_people_id)) {
+				$args['mintance_identifier'] = $this->_identifier;
+			}
+		});
+	}
+
 	public function identify($identifier) {
 
+		if(!empty($this->_people_id)) {
+			return $this->_people_id;
+		}
+
+		if(empty($this->_visitor_id)) {
+			throw new Exception('Empty visitor_id.');
+		}
+
+		$this->_transport->setEndpoint('people/identify');
+
+		$response = $this->_transport->execute([
+			'visitor_id' => $this->_visitor_id,
+			'identifier' => $identifier
+		]);
+
+		$this->_people = $response['people'];
+
+		$this->_type = 'people';
+
+		return $this->_people_id = $response['people_id'];
 	}
 
 	public function set(array $args) {
+		$data = [
+			'fields' => []
+		];
 
-	}
-
-	public function __set($key, $value) {
-		// TODO: Implement __set() method.
+		foreach ($args as $key => $value) {
+			if(in_array($key, $this->_default_fields)) {
+				$data[$key] = $value;
+			} else {
+				$data['fields'][$key] = $value;
+			}
+		}
 	}
 
 	public function get() {
@@ -42,10 +86,6 @@ class People extends AbstractProducer {
 			'id' => !empty($this->_people_id) ? $this->_people_id : $this->_visitor_id,
 			'type' => $this->_type
 		]);
-	}
-
-	public function __get($key) {
-		// TODO: Implement __get() method.
 	}
 
 	protected function _subscribe() {

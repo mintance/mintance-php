@@ -2,33 +2,47 @@
 
 namespace Mintance\Producers;
 
+use Mintance\Exceptions\Exception;
+
 class Event extends AbstractProducer {
 
 	public function track($name, array $params = []) {
+		$response = $this->_push($this->_buildEvent($name, 'custom-event', $params));
 
-		$event = $this->_buildEvent($name, 'custom-event', $params);
-
-		$this->_push($event);
+		if(!empty($response['event_id'])) {
+			return $response['event_id'];
+		} else {
+			throw new Exception('Event sending error.');
+		}
 	}
 
 	public function charge($amount, array $params = []) {
 
-		$event = $this->_buildEvent('Charge', 'charge', array_merge($params, [
+		$response = $this->_push($this->_buildEvent('Charge', 'charge', array_merge($params, [
 			'value' => $amount
-		]));
+		])));
 
-		$this->_push($event);
+		if(!empty($response['charge_id'])) {
+			return $response['charge_id'];
+		} else {
+			throw new Exception('Charge sending error.');
+		}
 	}
 
 	public function formSubmit(array $data) {
-		$event = array_merge(
+
+		$response = $this->_push(array_merge(
 			$this->_buildEvent('Form Submit', 'form-submit'),
 			[
 				'form_data' => $data
 			]
-		);
+		));
 
-		$this->_push($event);
+		if(!empty($response['event_id'])) {
+			return $response['event_id'];
+		} else {
+			throw new Exception('Charge sending error.');
+		}
 	}
 
 	protected function _buildEvent($name, $type, array $params = []) {
@@ -42,6 +56,6 @@ class Event extends AbstractProducer {
 	protected function _push(array $event) {
 		$this->_transport->setEndpoint('events');
 
-		$this->_transport->execute($event);
+		return $this->_transport->execute($event);
 	}
 }
