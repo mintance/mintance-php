@@ -2,11 +2,10 @@
 
 namespace Mintance;
 
-use Helpers\Session;
-use Mintance\Exceptions\Exception;
 use Mintance\Producers\Event;
 use Mintance\Producers\People;
 use Mintance\Transport\Curl;
+use Mintance\Session\Session;
 
 class Mintance {
 
@@ -47,11 +46,15 @@ class Mintance {
 	}
 
 	public function track($name, array $params = []) {
-		$this->_event->track($name, $params);
+		return $this->_event->track($name, $params);
 	}
 
-	public function charge() {
+	public function charge($amount, array $params = []) {
+		return $this->_event->charge($amount, $params);
+	}
 
+	public function formSubmit(array $data) {
+		return $this->_event->formSubmit($data);
 	}
 
 	protected function _initTransport() {
