@@ -5,11 +5,13 @@ Install with Composer
 ------------
 Add mintance/mintance-php as a dependency and run composer update
 
+```bash
+$ php composer.phar install mintance/mintance-php
+```
+Or:
 ```json
 "require": {
-    ...
-    "mintance/mintance-php" : "1.*"
-    ...
+    "mintance/mintance-php" : "1.*",
 }
 ```
 
@@ -17,22 +19,23 @@ Now you can start tracking events and people:
 
 ```php
 <?php
-// import dependencies
+// Import dependencies
 require 'vendor/autoload.php';
 
-// create Mintance class, replace with your project token
+// Create Mintance class, replace with your project token
 $mt = new Mintance("PROJECT_TOKEN");
 
-// track an event
+// Track an event
 $mt->track("button clicked", array("label" => "sign-up")); 
 
-// create/update a profile for user id 12345
+// Create/Update a profile for user id 12345
 $mt->people->set(array(
     'first_name'       => "John",
     'last_name'        => "Doe",
     'email'            => "john.doe@example.com",
     'phone'            => "5555555555",
-    "Favorite Color"    => "red"
+    // Custom fields
+    'Favorite Color'    => "red"
 ));
 ```
 
@@ -45,21 +48,22 @@ Install Manually
 
 ```php
 <?php
-// import Mixpanel
+// Import Mintance
 require 'mintance-php/src/Mintance.php';
 
-// create Mintance class, replace with your project token
+// Create Mintance class, replace with your project token
 $mt = new Mintance("PROJECT_TOKEN");
 
-// track an event
+// Track an event
 $mt->track("button clicked", array("label" => "sign-up")); 
 
-// create/update a profile for user id 12345
+// Create/Update a profile for user id 12345
 $mt->people->set(array(
     'first_name'       => "John",
     'last_name'        => "Doe",
     'email'            => "john.doe@example.com",
     'phone'            => "5555555555",
-    "Favorite Color"    => "red"
+    // Custom fields
+    'Favorite Color'    => "red"
 ));
 ```
