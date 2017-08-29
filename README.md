@@ -6,12 +6,14 @@ Install with Composer
 Add mintance/mintance-php as a dependency and run composer update
 
 ```bash
-$ php composer.phar install mintance/mintance-php
+$ composer require mintance/mintance-php
 ```
 Or:
 ```json
-"require": {
-    "mintance/mintance-php" : "1.*",
+{
+    "require": {
+        "mintance/mintance-php" : "1.*"
+    }
 }
 ```
 
@@ -24,6 +26,9 @@ require 'vendor/autoload.php';
 
 // Create Mintance class, replace with your project token
 $mt = new Mintance("PROJECT_TOKEN");
+
+// Identify your contact.
+$mt->people->setIdentifier("my_people_id");
 
 // Track an event
 $mt->track("button clicked", array("label" => "sign-up")); 
