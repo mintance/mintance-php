@@ -4,8 +4,22 @@ namespace Mintance\Producers;
 
 use Mintance\Exceptions\Exception;
 
+/**
+ * Class Event
+ * @package Mintance\Producers
+ */
 class Event extends AbstractProducer {
 
+	/**
+	 * Tracking custom event function.
+	 *
+	 * @param string $name Event name.
+	 * @param array $params Event params.
+	 *
+	 * @return string Event ID if success.
+	 *
+	 * @throws \Mintance\Exceptions\Exception Throws exception if something goes wrong.
+	 */
 	public function track($name, array $params = []) {
 		$response = $this->_push($this->_buildEvent($name, 'custom-event', $params));
 
@@ -16,6 +30,17 @@ class Event extends AbstractProducer {
 		}
 	}
 
+	/**
+	 * Tracking Purchase event.
+	 *
+	 * @param float $amount Amount of money.
+	 * @param array $params Purchase params
+	 *  Default params are: currency, products
+	 *
+	 * @return string Charge ID if success.
+	 *
+	 * @throws \Mintance\Exceptions\Exception Throws exception if something goes wrong.
+	 */
 	public function charge($amount, array $params = []) {
 
 		$response = $this->_push($this->_buildEvent('Charge', 'charge', array_merge($params, [
@@ -29,6 +54,14 @@ class Event extends AbstractProducer {
 		}
 	}
 
+	/**
+	 * Tracking form submission event.
+	 *
+	 * @param array $data Form fields data.
+	 *
+	 * @return string Event ID if success.
+	 * @throws \Mintance\Exceptions\Exception Throws exception if something goes wrong.
+	 */
 	public function formSubmit(array $data) {
 
 		$response = $this->_push(array_merge(
@@ -45,6 +78,15 @@ class Event extends AbstractProducer {
 		}
 	}
 
+	/**
+	 * Function builds event object by default fields.
+	 *
+	 * @param string $name Event name
+	 * @param string $type Event type
+	 * @param array $params Custom params.
+	 *
+	 * @return array Event Data object (array).
+	 */
 	protected function _buildEvent($name, $type, array $params = []) {
 		return [
 			'event_name' => $name,
@@ -53,7 +95,15 @@ class Event extends AbstractProducer {
 		];
 	}
 
+	/**
+	 * Function send's event to mintance.
+	 *
+	 * @param array $event Event data.
+	 *
+	 * @return \Mintance\Transport\AbstractTransport
+	 */
 	protected function _push(array $event) {
+
 		$this->_transport->setEndpoint('events');
 
 		return $this->_transport->execute($event);

@@ -4,6 +4,12 @@ namespace Mintance\Transport;
 
 use Mintance\Core\DispatcherLoop;
 
+/**
+ * Class AbstractTransport
+ * @package Mintance\Transport
+ *
+ * @method AbstractTransport execute(mixed $data)
+ */
 abstract class AbstractTransport extends DispatcherLoop {
 
 	protected $_token;
@@ -26,7 +32,6 @@ abstract class AbstractTransport extends DispatcherLoop {
 
 		return $this;
 	}
-
 
 	protected abstract function _execute($args);
 }

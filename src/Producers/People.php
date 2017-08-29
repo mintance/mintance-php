@@ -2,27 +2,58 @@
 
 namespace Mintance\Producers;
 
-use Mintance\Exceptions\Exception;
 use Mintance\Transport\AbstractTransport;
 
+/**
+ * Class People
+ * @package Mintance\Producers
+ */
 class People extends AbstractProducer {
 
+	/**
+	 * @var string Generated Permanent ID.
+	 */
 	protected $_permanent_id;
 
+	/**
+	 * @var string Visitor ID from mintance.
+	 */
 	protected $_visitor_id;
 
+	/**
+	 * @var string People ID from mintance.
+	 */
 	protected $_people_id;
 
+	/**
+	 * @var string Custom people identifier.
+	 */
 	protected $_identifier;
 
+	/**
+	 * @var string People type.
+	 */
 	protected $_type = 'visitor';
 
+	/**
+	 * @var array People data from mintance.
+	 */
 	protected $_people = [];
 
+	/**
+	 * @var array Default people fields in Mintance.
+	 */
 	protected $_default_fields = [
-		'name', 'first_name', 'last_name', 'email', 'phone'
+		'name', 'first_name', 'last_name', 'middle_name', 'email', 'phone'
 	];
 
+	/**
+	 * People constructor.
+	 *
+	 * Generates permanent_id on init & subscribe to data transporter.
+	 *
+	 * @param \Mintance\Transport\AbstractTransport $transport
+	 */
 	public function __construct(AbstractTransport $transport) {
 		parent::__construct($transport);
 
@@ -31,6 +62,12 @@ class People extends AbstractProducer {
 		$this->_subscribe();
 	}
 
+	/**
+	 * Function sets custom people identifier.
+	 * You can identify & merge your visitors using any field, like id in your own system, or email, etc..
+	 *
+	 * @param string $identifier
+	 */
 	public function setIdentifier($identifier) {
 
 		$this->_identifier = $identifier;
@@ -42,6 +79,13 @@ class People extends AbstractProducer {
 		});
 	}
 
+	/**
+	 * Function merge's your visitor with mintance peoples.
+	 * And returns it's people_id in mintance.
+	 *
+	 * @param string $identifier Any custom identifier.
+	 * @return string People ID.
+	 */
 	public function identify($identifier) {
 
 		if(!empty($this->_people_id)) {
@@ -67,7 +111,13 @@ class People extends AbstractProducer {
 		return $this->_people_id = $response['people_id'];
 	}
 
+	/**
+	 * Update people data.
+	 *
+	 * @param array $args People fields.
+	 */
 	public function set(array $args) {
+
 		$data = [
 			'fields' => []
 		];
@@ -91,6 +141,11 @@ class People extends AbstractProducer {
 		$this->_transport->execute($data);
 	}
 
+	/**
+	 * Return's array with people data in mintance.
+	 *
+	 * @return array
+	 */
 	public function get() {
 		return array_replace(
 			$this->_people, [
@@ -99,6 +154,9 @@ class People extends AbstractProducer {
 		]);
 	}
 
+	/**
+	 * Subscription to data transporter to recognize & save people id or set it to request otherwise.
+	 */
 	protected function _subscribe() {
 		$this->_transport->register('execute:before', function (&$args) {
 			if(!empty($this->_people_id)) {
@@ -129,6 +187,11 @@ class People extends AbstractProducer {
 		});
 	}
 
+	/**
+	 * Permanent ID generator.
+	 *
+	 * @return string Permanent ID.
+	 */
 	protected function _generatePermanentId() {
 		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 			// 32 bits for "time_low"
