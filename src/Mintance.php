@@ -3,6 +3,7 @@
 namespace Mintance;
 
 use Mintance\Exceptions\Exception;
+use Mintance\Producers\Charge;
 use Mintance\Producers\Event;
 use Mintance\Producers\People;
 use Mintance\Transport\AbstractTransport;
@@ -38,9 +39,14 @@ class Mintance {
 	];
 
 	/**
-	 * @var \Mintance\Producers\Event Event producer object.
+	 * @var \Mintance\Producers\Event Events producer object.
 	 */
 	protected $_event;
+
+	/**
+	 * @var \Mintance\Producers\Charge Charges producer object.
+	 */
+	protected $_charge;
 
 	/**
 	 * @var \Mintance\Session\Session Session store object.
@@ -72,6 +78,8 @@ class Mintance {
 		$this->people = new People($this->_transport);
 
 		$this->_event = new Event($this->_transport);
+
+		$this->_charge = new Charge($this->_transport);
 
 		$this->_session = new Session($this->_transport);
 	}
@@ -110,7 +118,7 @@ class Mintance {
 	 * @throws Exception If something wrong
 	 */
 	public function charge($amount, array $params = []) {
-		return $this->_event->charge($amount, $params);
+		return $this->_charge->track($amount, $params);
 	}
 
 	/**

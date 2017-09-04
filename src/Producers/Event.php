@@ -31,30 +31,6 @@ class Event extends AbstractProducer {
 	}
 
 	/**
-	 * Tracking Purchase event.
-	 *
-	 * @param float $amount Amount of money.
-	 * @param array $params Purchase params
-	 *  Default params are: currency, products
-	 *
-	 * @return string Charge ID if success.
-	 *
-	 * @throws \Mintance\Exceptions\Exception Throws exception if something goes wrong.
-	 */
-	public function charge($amount, array $params = []) {
-
-		$response = $this->_push($this->_buildEvent('Charge', 'charge', array_merge($params, [
-			'value' => $amount
-		])));
-
-		if(!empty($response['charge_id'])) {
-			return $response['charge_id'];
-		} else {
-			throw new Exception('Charge sending error.');
-		}
-	}
-
-	/**
 	 * Tracking form submission event.
 	 *
 	 * @param array $data Form fields data.
