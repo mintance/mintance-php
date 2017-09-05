@@ -54,7 +54,7 @@ class Charge extends Event {
 		}
 
 		if(!empty($params['products'])) {
-			$charge['products'] = $params['products'];
+			$charge['products'] = is_array($params['products']) ? $params['products'] : [$params['products']];
 		}
 
 		return array_merge($charge, [
