@@ -23,15 +23,44 @@ class Charge extends Event {
 	 */
 	public function track($amount, array $params = []) {
 
-		$response = $this->_push($this->_buildEvent('New Charge', 'charge', array_merge($params, [
-			'value' => $amount
-		])));
+		$response = $this->_push(
+			$this->_buildEvent($amount, 'charge', $params)
+		);
 
 		if(!empty($response['charge_id'])) {
 			return $response['charge_id'];
 		} else {
 			throw new Exception('Charge sending error.');
 		}
+	}
+
+	/**
+	 * Function builds event object by default fields.
+	 *
+	 * @param float $value Charge value
+	 * @param string $type Event type
+	 * @param array $params Custom params.
+	 *
+	 * @return array Event Data object (array).
+	 */
+	protected function _buildEvent($value, $type, array $params = []) {
+
+		$charge = [
+			'value' => $value
+		];
+
+		if(!empty($params['currency'])) {
+			$charge['currency'] = $params['currency'];
+		}
+
+		if(!empty($params['products'])) {
+			$charge['products'] = $params['products'];
+		}
+
+		return array_merge($charge, [
+			'event_type' => $type,
+			'charge_params' => $params
+		]);
 	}
 
 	/**
