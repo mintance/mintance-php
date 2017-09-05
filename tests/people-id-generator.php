@@ -7,4 +7,4 @@ $mintance = new \Mintance\Mintance('d3be88e277c4d7a3b9f92c262d90683c1e49e5a1d50c
 	'protocol' => 'http'
 ]);
 
-$mintance->track('Test Event');
+print_r($mintance->people->get());
